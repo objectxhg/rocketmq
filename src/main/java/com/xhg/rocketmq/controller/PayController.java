@@ -28,9 +28,9 @@ public class PayController {
     public String callback(String text) throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
         /**
          * 创建消息:
-         * 主题 指定被订阅的Topic主题发送消息
-         * 二级分类
-         * 消息内容字节数组
+         *  Topic主题
+         *  二级标签
+         *  消息内容字节数组
          */
         Message message = new Message(RocketConfig.TOPIC, "taga", ("hello rocketMQ " + text).getBytes());
 

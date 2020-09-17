@@ -24,14 +24,23 @@ public class PayConsumer {
     private String consumerGroup = "pay_consumer";
 
     public PayConsumer() throws MQClientException {
+        /**
+         * 创建队列
+         */
         consumer = new DefaultMQPushConsumer(consumerGroup);
+        /**
+         * rocker 默认开启vip通道 vip端口为10909 若服务器未开放此端口 则设为false 不走vip通道 消费消息
+         * 若已开放 则不设置
+         */
+        consumer.setVipChannelEnabled(false);
+        // 指定服务端
         consumer.setNamesrvAddr(RocketConfig.NAME_SERVER);
-        // 设置消费地点,从最后一个进行消费(其实就是消费策略)
+        // 设置消费消费策略, 从最后一个进行消费
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         /**
-         * 指定订阅的Topic主题标签
+         * 指定订阅的Topic主题标签 和 二级标签 二级标签设为 * 表示全部二级标签
          */
-        consumer.subscribe(RocketConfig.TOPIC, "*");
+        consumer.subscribe(RocketConfig.TOPIC, "taga");
         // 注册监听器
         consumer.registerMessageListener((MessageListenerConcurrently)
                 (msgs, context) -> {

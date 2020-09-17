@@ -22,6 +22,11 @@ public class PayProducer {
 
     public PayProducer() {
         producer = new DefaultMQProducer(producerGroup);
+        /**
+         * rocker 默认开启vip通道 vip端口为10909 若服务器未开放此端口 则设为false 不走vip通道发送消息
+         * 若已开放 则不设置
+         */
+        producer.setVipChannelEnabled(false);
         // 指定nameServer地址,多个地址之间以 ; 隔开
         producer.setNamesrvAddr(RocketConfig.NAME_SERVER);
         start();

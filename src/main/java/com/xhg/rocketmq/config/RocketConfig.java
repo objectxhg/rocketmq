@@ -9,7 +9,7 @@ public class RocketConfig {
     /**
      * 端口
      */
-    public static final String NAME_SERVER = "121.43.158.136:9876";
+    public static final String NAME_SERVER = "127.0.0.1:9876";
 
     /**
      * topic,消息依赖于topic
