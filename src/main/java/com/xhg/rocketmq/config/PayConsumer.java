@@ -33,7 +33,7 @@ public class PayConsumer {
          * 若已开放 则不设置
          */
         consumer.setVipChannelEnabled(false);
-        // 指定服务端
+        // 指定服务端 创建pay_consumer 队列
         consumer.setNamesrvAddr(RocketConfig.NAME_SERVER);
         // 设置消费消费策略, 从最后一个进行消费
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);

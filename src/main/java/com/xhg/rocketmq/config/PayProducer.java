@@ -27,7 +27,10 @@ public class PayProducer {
          * 若已开放 则不设置
          */
         producer.setVipChannelEnabled(false);
-        // 指定nameServer地址,多个地址之间以 ; 隔开
+        /**
+         * 指定nameServer地址,多个地址之间以 ; 隔开
+         * 注册 broker
+         */
         producer.setNamesrvAddr(RocketConfig.NAME_SERVER);
         start();
     }

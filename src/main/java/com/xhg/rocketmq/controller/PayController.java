@@ -23,6 +23,21 @@ public class PayController {
     @Autowired
     private PayProducer payProducer;
 
+    /**
+     * https://www.jianshu.com/p/23b4f6bff320
+     * RocketMQ的消息存储是由consume queue和Commit Log配合完成的。
+     *
+     * consume queue是消息的逻辑队列，相当于字典的目录，存放的是消息的索引位置 用于指定消息在物理文件Commit Log中的位置 顺序写顺序读
+     *
+     * Commit Log是消息存放的物理文件，每台Broker上的Commit Log被本机所有的queue共享 文件顺序写，随机读
+     * Broker端在收到一条消息后，如果是消息需要落盘，则会在Commit Log中写入整条消息
+     * 并在consume queue中写入该消息的索引信息
+     * 消息被消费时，则根据consume queue中的信息去Commit Log中获取消息。RocketMQ在消息被消费后，并不会去Commit Log中删除消息，而是会保存3天（可配置）而后批量删除。
+     *
+     * RocketMQ支持同步刷盘及异步刷盘两种模式，同步刷盘指的是Producer将消息发送至Broker后，等待消息刷入Commit Log和consume queue后才算消息发送成功，
+     * 而异步刷盘则是将消息发送至Broker后，Broker将消息放入内存则告知Producer消息发送成功，而后由Broker自行将内存中的消息批量刷入磁盘
+     *
+     */
 
     @RequestMapping("/api/paymq")
     public String callback(String text) throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
@@ -31,6 +46,15 @@ public class PayController {
          *  Topic主题
          *  二级标签
          *  消息内容字节数组
+         *
+         * 向NameServer 发送主题信息、二级标签、消息内容
+         *
+         * NameServer将 消息写入 Commit Log 中并在consume queue中写入该消息的索引信息
+         *
+         * 当消息被消费时 根据consume queue的索引信息去Commit Log获取消息
+         *
+         * 消费完成后Commit Log中的消息不会被立马删除，而是会保存3天（可配置）然后批量删除。
+         *
          */
         Message message = new Message(RocketConfig.TOPIC, "taga", ("hello rocketMQ " + text).getBytes());
 
