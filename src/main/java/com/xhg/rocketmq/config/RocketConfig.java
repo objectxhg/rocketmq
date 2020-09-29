@@ -9,10 +9,12 @@ public class RocketConfig {
     /**
      * 端口
      */
-    public static final String NAME_SERVER = "127.0.0.1:9876";
+    public static final String NAME_SERVER = "localhost:9876";
 
     /**
      * topic,消息依赖于topic
+     *
+     * 用来区分消息种类
      */
     public static final String TOPIC = "pay_topic";
 

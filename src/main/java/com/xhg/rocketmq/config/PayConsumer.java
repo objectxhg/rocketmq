@@ -47,14 +47,14 @@ public class PayConsumer {
                     try {
                         // 获取Message
                         Message msg = msgs.get(0);
-                        System.out.printf("%s Receive New Messages: %s %n",
+                        System.out.printf("%s 【 Consumer 监听到消息 】: %s %n",
                                 Thread.currentThread().getName(), new String(msgs.get(0).getBody()));
                         String topic = msg.getTopic();
                         String body = new String(msg.getBody(), "utf-8");
                         // 标签
                         String tags = msg.getTags();
                         String keys = msg.getKeys();
-                        System.out.println("topic=" + topic + ", tags=" + tags + ",keys=" + keys + ", msg=" + body);
+                        System.out.println("【 消费者 Consumer 】 topic=" + topic + ", tags=" + tags + ",keys=" + keys + ", msg=" + body);
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
@@ -62,7 +62,7 @@ public class PayConsumer {
                     }
                 });
         consumer.start();
-        System.out.println("Consumer Listener");
+        System.out.println("【Consumer Listener】");
     }
 }
 

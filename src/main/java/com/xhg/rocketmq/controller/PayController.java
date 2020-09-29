@@ -2,6 +2,7 @@ package com.xhg.rocketmq.controller;
 
 import com.xhg.rocketmq.config.PayProducer;
 import com.xhg.rocketmq.config.RocketConfig;
+import com.xhg.rocketmq.threadPool.service.AsyncTaskService;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -10,6 +11,8 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PayController {
 
     @Autowired
-    private PayProducer payProducer;
+    private AsyncTaskService asyncTaskService;
 
     /**
      * https://www.jianshu.com/p/23b4f6bff320
@@ -35,21 +38,21 @@ public class PayController {
      * 消息被消费时，则根据consume queue中的信息去Commit Log中获取消息。RocketMQ在消息被消费后，并不会去Commit Log中删除消息，而是会保存3天（可配置）而后批量删除。
      *
      * RocketMQ支持同步刷盘及异步刷盘两种模式，同步刷盘指的是Producer将消息发送至Broker后，等待消息刷入Commit Log和consume queue后才算消息发送成功，
-     * 而异步刷盘则是将消息发送至Broker后，Broker将消息放入内存则告知Producer消息发送成功，而后由Broker自行将内存中的消息批量刷入磁盘
+     * 而异步刷盘则是将消息发送至Broker后，Broker将消息放入内存后立马告知Producer消息发送成功，而后由Broker自行将内存中的消息批量刷入磁盘
      *
      */
 
     @RequestMapping("/api/paymq")
-    public String callback(String text) throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
+    public String callback(String text) throws InterruptedException, RemotingException, MQClientException, MQBrokerException, UnsupportedEncodingException {
         /**
          * 创建消息:
          *  Topic主题
          *  二级标签
          *  消息内容字节数组
          *
-         * 向NameServer 发送主题信息、二级标签、消息内容
+         * 向broker 发送主题信息、二级标签、消息内容
          *
-         * NameServer将 消息写入 Commit Log 中并在consume queue中写入该消息的索引信息
+         * broker将 消息写入 Commit Log 中并在consume queue中写入该消息的索引信息
          *
          * 当消息被消费时 根据consume queue的索引信息去Commit Log获取消息
          *
@@ -58,9 +61,9 @@ public class PayController {
          */
         Message message = new Message(RocketConfig.TOPIC, "taga", ("hello rocketMQ " + text).getBytes());
 
-        SendResult send = payProducer.getProducer().send(message);
+        asyncTaskService.sendMQAsyncTask(message);
 
-        System.out.println(send);
+        System.out.println("发送成功");
 
         return "发送成功";
     }

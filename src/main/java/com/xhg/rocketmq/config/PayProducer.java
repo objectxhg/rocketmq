@@ -28,8 +28,8 @@ public class PayProducer {
          */
         producer.setVipChannelEnabled(false);
         /**
-         * 指定nameServer地址,多个地址之间以 ; 隔开
-         * 注册 broker
+         * 指定nameServer地址,多个地址(集群)之间用 ; 隔开
+         * 注册 Broker  定时向NameServer提供主题信息,告诉NameServer我这里可以把消息传落盘和传输给消费者Consumer
          */
         producer.setNamesrvAddr(RocketConfig.NAME_SERVER);
         start();
