@@ -15,7 +15,7 @@ public class PayProducer {
     /**
      * 生产组,生产者必须在生产组内
      */
-    private String producerGroup = "broker-a";
+    private String producerGroup = "broker-a"; //须更名为生产者 pay_producer
 
 
     private DefaultMQProducer producer;

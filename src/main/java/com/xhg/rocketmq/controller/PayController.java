@@ -59,11 +59,9 @@ public class PayController {
          * 消费完成后Commit Log中的消息不会被立马删除，而是会保存3天（可配置）然后批量删除。
          *
          */
-        Message message = new Message(RocketConfig.TOPIC, "taga", ("hello rocketMQ " + text).getBytes());
+        Message message = new Message(RocketConfig.TOPIC, "taga", (text).getBytes());
 
         asyncTaskService.sendMQAsyncTask(message);
-
-        System.out.println("发送成功");
 
         return "发送成功";
     }

@@ -24,7 +24,8 @@ public class AsyncTaskService {
     @Async
     public void sendMQAsyncTask(Message message) throws InterruptedException, RemotingException, MQClientException, MQBrokerException, UnsupportedEncodingException {
 
-        System.out.println("线程" + Thread.currentThread().getName() + " 执行异步任务：" + new String(message.getBody(), "utf-8"));
+        //System.out.println("线程" + Thread.currentThread().getName() + " 执行异步任务：" + new String(message.getBody(), "utf-8"));
+        System.out.println("线程" + Thread.currentThread().getName() + " 执行异步任务：");
         payProducer.getProducer().send(message);
     }
 }
